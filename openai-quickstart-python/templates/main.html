@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<head>
+  <title>Whatsee</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='styles.css') }}"
+  />
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon.ico') }}"
+  />
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6760875918415532"
+     crossorigin="anonymous"></script>
+</head>
+<body data-bs-theme="dark" onload="startPopup(); ">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img
+          src="{{url_for('static', filename='Whatsee.png')}}"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+          alt=""
+        />
+        Whatsee
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a
+            class="nav-link"
+            href="#"
+            data-bs-toggle="modal"
+            data-bs-target="#instructionModal"
+          >
+            Show Instructions
+          </a>
+          <a
+            onclick="showStats({{session['stats']}});"
+            class="nav-link"
+            href="#"
+            data-bs-toggle="modal"
+            data-bs-target="#statsModal"
+          >
+            Show Stats
+          </a>
+          <a
+          class="nav-link"
+          href="#"
+          data-bs-toggle="modal"
+          data-bs-target="#aboutModal"
+        >
+          About
+        </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <br />
+  <div class="text-center">
+    <img
+      src="{{url_for('static', filename='Whatsee.png')}}"
+      width="150"
+      height="150"
+      alt=""
+    />
+  </div>
+  <br />
+  <br />
+  <div id="carouselExampleIndicators" class="carousel slide">
+    <div class="carousel-indicators">
+      {% for i in range(session['images']|length) %} {% if i == 0 %}
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="{{i}}"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      {% else %}
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="{{i}}"
+        aria-label="Slide {{i}}"
+      ></button>
+      {% endif %} {% endfor %}
+    </div>
+    <div class="carousel-inner">
+      {% for i in range(session['images']|length) %} {% if i == [4,
+      session['guesses']|length]|min %}
+      <div class="carousel-item active">
+        <img
+          class="d-block w-30 img-responsive"
+          src="{{ url_for('static', filename=session['images'][i]) }}"
+        />
+      </div>
+      {% else %}
+      <div class="carousel-item">
+        <img
+          class="d-block w-30 img-responsive"
+          src="{{ url_for('static', filename=session['images'][i]) }}"
+        />
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  {% if session['done'] == session['day']%}
+  <p class="font-weight-bold text-center">You got it!</p>
+  <p class="text-center">{{session['full_sentence']}}</p>
+  {% elif session['guesses']|length > 4 %}
+  <p class="font-weight-bold text-center">The answer was:</p>
+  <p class="text-center">{{session['full_sentence']}}</p>
+  {% else %}
+  <p class="text-center">
+    Please fill in the missing words in the following sentence:{{today}}
+  </p>
+  <p class="text-center">{{session['replaced_sentence']}}</p>
+  {% endif %}
+  <form
+    autocomplete="off"
+    class="row justify-content-md-center gy-2"
+    action="/"
+    method="post"
+  >
+    {% for i in range(session['wordLen'])%} {% if session['done'] == session['day'] or
+    session['guesses']|length > 4 %}
+    <div class="col-md-3">
+      <input
+        class="form-control"
+        id="word{{i}}"
+        name="word{{i}}"
+        value="{{session['correct'][i]}}"
+        placeholder="Word {{i+1}}"
+        disabled
+        readonly
+      />
+    </div>
+    {% elif session['correct'][i] != "" %}
+    <div class="col-md-3">
+      <input
+        class="form-control"
+        list="datalistOptions{{i}}"
+        value="{{session['correct'][i]}}"
+        id="word{{i}}"
+        name="word{{i}}"
+        placeholder="Word {{i+1}}"
+        readonly
+      />
+      <datalist id="datalistOptions{{i}}">
+        {% for word in session['word'+i|string+'stuff'] %}
+        <option value="{{word}}">{% endfor %}</option>
+      </datalist>
+    </div>
+    {% else %}
+    <div class="col-md-3 autocomplete">
+      <input
+        autocomplete="off"
+        class="form-control myInput"
+        id="word{{i}}"
+        name="word{{i}}"
+        placeholder="Word {{i+1}}"
+        required
+      />
+    </div>
+    {% endif %} {% endfor %}
+    <div class="col-12 text-center">
+      {% if session['done'] == session['day'] or session['guesses']|length > 4 %}
+      <button type="submit" class="btn btn-primary" disabled>Submit</button>
+      {% else %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+      {% endif %}
+    </div>
+  </form>
+  <br />
+  {% if session['done'] ==  session['day'] or session['guesses']|length > 4 %}
+  <div class="text-center">
+    <button
+      type="button"
+      id="ShareButton"
+      class="btn btn-success text="
+      onclick="colorize({{session['guesses']}})"
+    >
+      Share
+    </button>
+  </div>
+  {% endif %}
+  <table class="table text-center text-white">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Guesses</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% for guess in session['guesses']|reverse %}
+      <tr>
+        {% for answers in guess %} {% if answers[1] == 'C' %}
+        <td style="color: green" class="word">{{ answers[0] }}</td>
+        {% elif answers[1] == 'P' %}
+        <td style="color: purple" class="word">{{ answers[0] }}</td>
+        {% else %}
+        <td style="color: red" class="word">{{ answers[0] }}</td>
+        {% endif %} {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- instructions Modal -->
+  <div
+    class="modal fade"
+    id="instructionModal"
+    tabindex="-1"
+    aria-labelledby="instructionModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Welcome to Whatsee
+          </h1>
+          <button
+            type="button"
+            class="btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Here are some instructions for using this website:</p>
+          <ul>
+            <li>
+              In front of you is an AI-generated image and a sentence with
+              blanks that describes the image.
+            </li>
+            <li>
+              Read the sentence carefully and try to understand what it is
+              describing. The sentence should contain three blanks that you need
+              to fill in to guess the image. The blanks represent a "person", an
+              "action", and a "place".
+            </li>
+            <li>
+              Type your answer into the blank spaces provided in the sentence.
+              Make sure to spell your answers correctly.
+            </li>
+            <li>
+              Once you have filled in all the blanks, hit the submit button.
+            </li>
+            <li>
+              The website will then indicate if your answer is correct or not.
+              If you guess the word correctly in the correct spot, the word will
+              turn green. If you guess it correctly but in the wrong spot, it
+              will turn purple. If your word is not in the sentence, it will
+              turn red.
+            </li>
+            <li>
+              Repeat the process until you have successfully guessed the image.
+              Every incorrect guess will show you an additional AI-generated
+              image with the same prompt. You have a total of 4 attempts and 5
+              images. There is a new set of images every day.
+            </li>
+            <li>
+              The image and prompt will change every day at 00:00 UTC. You can
+              come back to the website to play again.
+            </li>
+            <li>
+              Have fun and enjoy the challenge of guessing the AI-generated
+              image!
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- stats Modal -->
+  <div
+    class="modal fade"
+    id="statsModal"
+    tabindex="-1"
+    aria-labelledby="statsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Stats:</h1>
+          <button
+            type="button"
+            class="btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="chart" height="100px" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- About Modal-->
+  <div
+    class="modal fade"
+    id="statsModal"
+    tabindex="-1"
+    aria-labelledby="statsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Stats:</h1>
+          <button
+            type="button"
+            class="btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <canvas id="chart" height="100px" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Stats Modal-->
+  <div
+    class="modal fade"
+    id="aboutModal"
+    tabindex="-1"
+    aria-labelledby="aboutModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">About:</h1>
+          <button
+            type="button"
+            class="btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body text-left">
+          <h2>About the Project</h2>
+          <p>
+            Whatsee is a website that uses AI to generate images and prompts
+            each day. It uses <a href="https://openai.com">OpenAI's</a> GPT-3
+            API to generate the images and prompts. The goal of the project is
+            to create a fun and challenging game that can be played by anyone.
+            The website is currently in beta and is being developed by a single
+            developer. <br>
+          </p>
+          <h2>About the Developer</h2>
+          <p class="text-left">
+            Whatsee is made and maintained by
+            <a href="https://twitter.com/csconner1998">Conner Soule</a>. Conner
+            is a software developer who graduated for the University of Utah in
+            2020. He is currently working as a software engineer. You can find
+            more about him on
+            <a href="https://www.linkedin.com/in/conner-soule/">LinkedIn</a>. <br>
+          </p>
+          <h2>How to Contribute</h2>
+          <p class="text-left">
+            If you would like to contribute to the project, you can do so by
+            sending an email to
+            <a href="mailto: csconner1998@gmail.com">csconner1998@gmail.com</a>
+            with any feedback or suggestions. You can also support the project
+            by donating to the developer's
+            <a href="https://paypal.me/connersoule">PayPal</a> or
+            <a href="https://account.venmo.com/u/Conner-Soule">Venmo</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script
+    src="https://code.jquery.com/jquery-3.6.3.js"
+    integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.0/chart.min.js"
+    integrity="sha512-R60W3LgKdvvfwbGbqKusRu/434Snuvr9/Flhtoq9cj1LQ9P4HFKParULqOCAisHk/J4zyaEWWjiWIMuP13vXEg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"
+  ></script>
+  <script src="{{url_for('static', filename='myJS.js')}}"></script>
+</body>
