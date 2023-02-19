@@ -9,8 +9,6 @@ from nltk.stem import WordNetLemmatizer
 import re
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-if openai.api_key == None:
-    openai.api_key = "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"
 # Takes in a word and a sentence, returns which word it is in the sentence
 def find_word(word,sentence):
     wordList = sentence.lower().split()
