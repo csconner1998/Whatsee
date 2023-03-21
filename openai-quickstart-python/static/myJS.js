@@ -38,7 +38,6 @@ var words = [
   "magician",
   "animal trainer",
   "puppeteer",
-  "clown",
   "elmo",
   "santa claus",
   "mime",
@@ -55,7 +54,6 @@ var words = [
   "alien",
   "dinosaur",
   "dragon",
-  "horse",
   "running",
   "jumping",
   "dancing",
@@ -64,7 +62,6 @@ var words = [
   "flying",
   "rowing",
   "sailing",
-  "surfing",
   "singing",
   "writing",
   "drawing",
@@ -151,64 +148,74 @@ var words = [
   "taj mahal",
   "golden gate bridge",
   "mount rushmore",
-  "grand canyon"
-]
+  "grand canyon",
+];
 function startPopup() {
-  const noShow = localStorage.getItem('noShow');
+  const noShow = localStorage.getItem("noShow");
   if (noShow) {
     return;
-  }
-  else {
-    $('#instructionModal').modal('show');
-    localStorage.setItem('noShow', true);
+  } else {
+    $("#instructionModal").modal("show");
+    localStorage.setItem("noShow", true);
   }
 }
 
 function showStats(inputData) {
-  var totalRight = inputData.slice(0, -1).reduce((partialSum, a) => partialSum + a, 0);
+  var totalRight = inputData
+    .slice(0, -1)
+    .reduce((partialSum, a) => partialSum + a, 0);
   var total = parseInt(totalRight) + parseInt(inputData.slice(-1));
   statChart.data.datasets[0].data = inputData.slice(0, -1);
-  statChart.options.scales.x.title.text = totalRight + "/" + total + " correct (" + (totalRight / Math.max(total, 1) * 100).toFixed(2) + "%)"
+  statChart.options.scales.x.title.text =
+    totalRight +
+    "/" +
+    total +
+    " correct (" +
+    ((totalRight / Math.max(total, 1)) * 100).toFixed(2) +
+    "%)";
   statChart.update();
 }
 
-const ctx = document.getElementById('chart');
+const ctx = document.getElementById("chart");
 var keys = [];
-var inputData = [0, 0, 0, 0, 0, 0]
+var inputData = [0, 0, 0, 0, 0, 0];
 for (var i = 0; i < Object.keys(inputData.slice(0, -1)).length; i++) {
   if (i == 0) {
-    keys.push((i + 1) + " guess");
-  }
-  else {
-    keys.push((i + 1) + " guesses");
+    keys.push(i + 1 + " guess");
+  } else {
+    keys.push(i + 1 + " guesses");
   }
 }
-var totalRight = inputData.slice(0, -1).reduce((partialSum, a) => partialSum + a, 0);
+var totalRight = inputData
+  .slice(0, -1)
+  .reduce((partialSum, a) => partialSum + a, 0);
 var total = parseInt(totalRight) + parseInt(inputData.slice(-1));
 Chart.register(ChartDataLabels);
 statChart = new Chart(ctx, {
-  type: 'bar',
+  type: "bar",
   data: {
     labels: keys,
-    datasets: [{
-      data: Object.values(inputData.slice(0, -1)),
-      label: " ",
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(255, 159, 64, 0.6)',
-        'rgba(255, 205, 86, 0.6)',
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-      ],
-      borderColor: [
-        'rgb(255, 99, 132)',
-        'rgb(255, 159, 64)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(54, 162, 235)',
-      ],
-      borderWidth: 3
-    }]
+    datasets: [
+      {
+        data: Object.values(inputData.slice(0, -1)),
+        label: " ",
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+          "rgba(255, 205, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+        ],
+        borderWidth: 3,
+      },
+    ],
   },
   options: {
     aspectRatio: 4,
@@ -218,54 +225,59 @@ statChart = new Chart(ctx, {
         right: 10,
         top: 10,
         bottom: 10,
-      }
+      },
     },
     plugins: {
       legend: {
         display: false,
       },
-      tooltip:
-      {
+      tooltip: {
         enabled: false,
       },
       datalabels: {
-        color: '#ffffff',
-      }
+        color: "#ffffff",
+      },
     },
-    indexAxis: 'y',
+    indexAxis: "y",
     scales: {
       x: {
         ticks: {
-          color: '#ffffff',
+          color: "#ffffff",
           display: false,
         },
         title: {
-          text: totalRight + "/" + total + " correct (" + (totalRight / Math.max(total, 1) * 100).toFixed(2) + "%)",
-          color: '#ffffff',
+          text:
+            totalRight +
+            "/" +
+            total +
+            " correct (" +
+            ((totalRight / Math.max(total, 1)) * 100).toFixed(2) +
+            "%)",
+          color: "#ffffff",
           display: true,
           font: {
             size: 20,
-            weight: 'bold',
-          }
+            weight: "bold",
+          },
         },
         grid: {
-          color: '#ffffff',
+          color: "#ffffff",
           display: false,
         },
         beginAtZero: true,
       },
       y: {
         grid: {
-          color: '#ffffff',
+          color: "#ffffff",
           display: false,
         },
         ticks: {
-          color: '#ffffff'
+          color: "#ffffff",
         },
-      }
+      },
     },
     responsive: true,
-  }
+  },
 });
 
 function colorize(lists) {
@@ -287,18 +299,18 @@ function colorize(lists) {
     result += "\n";
   }
   navigator.clipboard.writeText(result);
-  var target = $('#ShareButton')[0];
+  var target = $("#ShareButton")[0];
   const currentLabel = target.innerHTML;
-  if (target.innerHTML === 'Copied!') {
+  if (target.innerHTML === "Copied!") {
     return;
   }
   // Update button label
-  target.innerHTML = 'Copied!';
+  target.innerHTML = "Copied!";
 
   // Revert button label after 3 seconds
   setTimeout(function () {
     target.innerHTML = currentLabel;
-  }, 3000)
+  }, 3000);
 }
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
@@ -306,10 +318,15 @@ function autocomplete(inp, arr) {
   var currentFocus;
   /*execute a function when someone writes in the text field:*/
   inp.addEventListener("input", function (e) {
-    var a, b, i, val = this.value;
+    var a,
+      b,
+      i,
+      val = this.value;
     /*close any already open lists of autocompleted values*/
     closeAllLists();
-    if (!val) { return false; }
+    if (!val) {
+      return false;
+    }
     currentFocus = -1;
     /*create a DIV element that will contain the items (values):*/
     a = document.createElement("DIV");
@@ -321,13 +338,16 @@ function autocomplete(inp, arr) {
     var maxItems = 0;
     for (i = 0; i < arr.length; i++) {
       /*check if the item starts with the same letters as the text field value:*/
-      if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase() && maxItems < 3) {
+      if (arr[i].toUpperCase().includes(val.toUpperCase()) && maxItems < 4) {
         maxItems++;
         /*create a DIV element for each matching element:*/
         b = document.createElement("DIV");
+        var indexOfStr = arr[i].toUpperCase().indexOf(val.toUpperCase());
         /*make the matching letters bold:*/
-        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-        b.innerHTML += arr[i].substr(val.length);
+        b.innerHTML = arr[i].substr(0, indexOfStr);
+        b.innerHTML +=
+          "<strong>" + arr[i].substr(indexOfStr, val.length) + "</strong>";
+        b.innerHTML += arr[i].substr(indexOfStr + val.length);
         /*insert a input field that will hold the current array item's value:*/
         b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
         /*execute a function when someone clicks on the item value (DIV element):*/
@@ -352,13 +372,15 @@ function autocomplete(inp, arr) {
       currentFocus++;
       /*and and make the current item more visible:*/
       addActive(x);
-    } else if (e.keyCode == 38) { //up
+    } else if (e.keyCode == 38) {
+      //up
       /*If the arrow UP key is pressed,
       decrease the currentFocus variable:*/
       currentFocus--;
       /*and and make the current item more visible:*/
       addActive(x);
-    } else if (e.keyCode == 9) { //tab
+    } else if (e.keyCode == 9) {
+      //tab
       console.log("tab");
       closeAllLists();
     } else if (e.keyCode == 13) {
@@ -376,7 +398,7 @@ function autocomplete(inp, arr) {
     /*start by removing the "active" class on all items:*/
     removeActive(x);
     if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
+    if (currentFocus < 0) currentFocus = x.length - 1;
     /*add class "autocomplete-active":*/
     x[currentFocus].classList.add("autocomplete-active");
   }
@@ -403,5 +425,5 @@ function autocomplete(inp, arr) {
 }
 var inputBoxes = document.getElementsByClassName("myInput");
 for (var i of inputBoxes) {
-  autocomplete(i, words)
+  autocomplete(i, words);
 }
