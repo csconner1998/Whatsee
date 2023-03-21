@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Welcome to my Landing Page
+{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">Hello, world!</h1>
+    <p class="lead">This is a simple landing page created using Flask and Bootstrap.</p>
+    <hr class="my-4">
+    <p>Click the button below to log in.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Log in</a>
+  </div>
+{% endblock %}
