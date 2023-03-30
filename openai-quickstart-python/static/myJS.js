@@ -416,3 +416,9 @@ var inputBoxes = document.getElementsByClassName("myInput");
 for (var i of inputBoxes) {
   autocomplete(i, words)
 }
+$(function() {
+  $('.pop').on('click', function() {
+    $('.imagepreview').attr('src', $(this)[0].src);
+    $('#imagemodal').modal('show');   
+  });		
+});
