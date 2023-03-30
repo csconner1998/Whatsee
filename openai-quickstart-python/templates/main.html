@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<head>
+<head
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MN9JL5EHLJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MN9JL5EHLJ');
+</script>
   <title>Whatsee</title>
   <!-- Required meta tags -->
   <meta charset="utf-8" />
@@ -80,15 +89,6 @@
     </div>
   </nav>
   <br />
-  <div class="text-center">
-    <img
-      src="{{url_for('static', filename='Whatsee.png')}}"
-      width="150"
-      height="150"
-      alt=""
-    />
-  </div>
-  <br />
   <br />
   <div id="carouselExampleIndicators" class="carousel slide">
     <div class="carousel-indicators">
@@ -147,7 +147,7 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-  {% if session['done'] == session['day']%}
+  {% if session['done']%}
   <p class="font-weight-bold text-center">You got it!</p>
   <p class="text-center">{{session['full_sentence']}}</p>
   {% elif session['guesses']|length > 4 %}
@@ -165,7 +165,7 @@
     action="/"
     method="post"
   >
-    {% for i in range(session['wordLen'])%} {% if session['done'] == session['day'] or
+    {% for i in range(session['wordLen'])%} {% if session['done'] or
     session['guesses']|length > 4 %}
     <div class="col-md-3">
       <input
@@ -207,7 +207,7 @@
     </div>
     {% endif %} {% endfor %}
     <div class="col-12 text-center">
-      {% if session['done'] == session['day'] or session['guesses']|length > 4 %}
+      {% if session['done'] or session['guesses']|length > 4 %}
       <button type="submit" class="btn btn-primary" disabled>Submit</button>
       {% else %}
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -215,7 +215,7 @@
     </div>
   </form>
   <br />
-  {% if session['done'] ==  session['day'] or session['guesses']|length > 4 %}
+  {% if session['done'] or session['guesses']|length > 4 %}
   <div class="text-center">
     <button
       type="button"

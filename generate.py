@@ -20,8 +20,6 @@ def find_word(word,sentence):
     return -1
 
 def same_word_different_tense(word1, word2):
-    word1 = word1.lower()
-    word2 = word2.lower()
     lemmatizer = WordNetLemmatizer()
     noun1 = lemmatizer.lemmatize(word1)
     noun2 = lemmatizer.lemmatize(word2)
@@ -35,7 +33,7 @@ def same_word_different_tense(word1, word2):
 # Takes in a string, generates an AI image of it, and saves it to a file
 def generate_image(words,sentence, date):
     response = openai.Image.create(
-        prompt=sentence,
+        prompt=sentence + " Digital art.",
         n=5,
         size="512x512"
     )
@@ -73,7 +71,7 @@ def check_dir():
                 os.remove(os.path.join("./openai-quickstart-python/static/images/"+d3, f))
             os.rmdir("./openai-quickstart-python/static/images/"+d3)
 # Load the JSON object from the file
-with open('stuff.json', 'r') as f:
+with open('./stuff.json', 'r') as f:
   data = json.load(f)
 
 # Get the lists of people, actions, places, and things
@@ -111,12 +109,12 @@ for i in range(4):
 
             response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=f"Generate a very simple sentence using the following words: {person}, {action}, {place}. Also make the sentence very easy for DALL-E to draw.",
-            temperature=0.5,
+            prompt=f"Generate a very simple sentence using the following words: {person}, {action}, {place}. Also make the sentence very easy for DALL-E to draw",
+            temperature=0.7,
             max_tokens=256,
             top_p=1,
             frequency_penalty=0,
-            presence_penalty=0  
+            presence_penalty=0
             )
             # Print out the random elements
             sentence  = str.strip(response['choices'][0]['text']).replace('"','')
