@@ -273,8 +273,12 @@ statChart = new Chart(ctx, {
   }
 });
 
-function colorize(lists) {
-  let result = "Whatsee " + lists.length + "/5\n";
+function colorize(lists, correct) {
+  var tries = lists.length.toString();
+  if (correct == "False" || correct == "false") {
+    tries = "X";
+  }
+  let result = "Whatsee " + tries + "/5\n";
   for (const list of lists) {
     for (const color of list) {
       switch (color.toLowerCase()) {

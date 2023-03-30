@@ -110,19 +110,21 @@
       ></button>
       {% endif %} {% endfor %}
     </div>
-    <div class="carousel-inner">
+    <div class="carousel-inner text-center">
       {% for i in range(session['images']|length) %} {% if i == [4,
       session['guesses']|length]|min %}
       <div class="carousel-item active">
         <img
-          class="d-block w-30 img-responsive"
+          class="img-responsive"
+          style="width: 30%; ;"
           src="{{ url_for('static', filename=session['images'][i]) }}"
         />
       </div>
       {% else %}
       <div class="carousel-item">
         <img
-          class="d-block w-30 img-responsive"
+          class="img-responsive"
+          style="width: 30%;"
           src="{{ url_for('static', filename=session['images'][i]) }}"
         />
       </div>
@@ -221,13 +223,13 @@
       type="button"
       id="ShareButton"
       class="btn btn-success text="
-      onclick="colorize({{session['guesses']}})"
+      onclick="colorize({{session['guesses']}}, '{{session['done']|string}}')"
     >
       Share
     </button>
   </div>
   {% endif %}
-  <table class="table text-center text-white">
+  <table class="table text-center text-white w-50 m-auto">
     <thead>
       <tr>
         <th></th>
@@ -278,34 +280,10 @@
               blanks that describes the image.
             </li>
             <li>
-              Read the sentence carefully and try to understand what it is
-              describing. The sentence should contain three blanks that you need
-              to fill in to guess the image. The blanks represent a "person", an
-              "action", and a "place".
+              Guess the missing words.
             </li>
             <li>
-              Type your answer into the blank spaces provided in the sentence.
-              Make sure to spell your answers correctly.
-            </li>
-            <li>
-              Once you have filled in all the blanks, hit the submit button.
-            </li>
-            <li>
-              The website will then indicate if your answer is correct or not.
-              If you guess the word correctly in the correct spot, the word will
-              turn green. If you guess it correctly but in the wrong spot, it
-              will turn purple. If your word is not in the sentence, it will
-              turn red.
-            </li>
-            <li>
-              Repeat the process until you have successfully guessed the image.
-              Every incorrect guess will show you an additional AI-generated
-              image with the same prompt. You have a total of 4 attempts and 5
-              images. There is a new set of images every day.
-            </li>
-            <li>
-              The image and prompt will change every day at 00:00 UTC. You can
-              come back to the website to play again.
+              You get 5 guesses and 5 images. Make sure to utilize the dropdowns.
             </li>
             <li>
               Have fun and enjoy the challenge of guessing the AI-generated
